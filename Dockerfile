@@ -1,13 +1,11 @@
-FROM teddysun/xray
-LABEL maintainer="https://github.com/jianyuann"
+FROM nginx:latest
 
-COPY config.json /etc/xray/config.json
-COPY xray.sh /xray.sh
-RUN chmod +x /xray.sh
-ENV PATH /usr/bin/xray:$PATH
-ENV PORT 8888
-ENV TZ=Asia/Shanghai
+# noop for legacy migration
+RUN mkdir /app && \
+    echo "#!/bin/bash" > /app/migrate.sh && \
+    chmod +x /app/migrate.sh
 
-WORKDIR /etc/xray
-ENTRYPOINT ["/xray.sh"]
-CMD ["xray", "-config=/etc/xray/config.json"]
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY html /usr/share/nginx/html
+
+EXPOSE 80
